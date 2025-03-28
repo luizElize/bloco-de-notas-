@@ -4,23 +4,22 @@ import tkinter as tk
 from tkinter import filedialog
 
 def new_file():
-    text.delete(1.0, tk.END)
+    text.delete("1.0", tk.END)
 
 def open_file():
     file_path = filedialog.askopenfilename(defaultextension=".txt", filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")])
     if file_path:
         with open(file_path, "r") as file:
-            text_content = file.read()
-            text.delete(1.0, tk.END)
-            text.insert(tk.END, text_content)
+            text.delete("1.0", tk.END)
+            text.insert(tk.END, file.read())
 
 def save_file():
     file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")])
     if file_path:
         with open(file_path, "w") as file:
-            text_content = text.get(1.0, tk.END)
-            file.write(text_content)
+            file.write(text.get("1.0", tk.END).strip())
 
+# Configuração da interface gráfica
 app = tk.Tk()
 app.title("Bloco de Notas")
 
