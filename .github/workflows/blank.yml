@@ -1,0 +1,60 @@
+import React, { useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+
+const Stack = createNativeStackNavigator();
+
+const HomeScreen = ({ navigation, route }) => {
+  const [notes, setNotes] = useState([]);
+
+  React.useEffect(() => {
+    if (route.params?.newNote) {
+      const updatedNotes = [...notes];
+      if (route.params.editIndex !== undefined) {
+        updatedNotes[route.params.editIndex] = route.params.newNote;
+      } else {
+        updatedNotes.push(route.params.newNote);
+      }
+      setNotes(updatedNotes);
+    }
+  }, [route.params?.newNote]);
+
+  const deleteNote = (index) => {
+    const updated = [...notes];
+    updated.splice(index, 1);
+    setNotes(updated);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Button title="Nova Nota" onPress={() => navigation.navigate('Note')} />
+      <FlatList
+        data={notes}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            style={styles.noteItem}
+            onPress={() =>
+              navigation.navigate('Note', { note: item, index })
+            }
+          >
+            <Text style={styles.noteText}>{item}</Text>
+            <Button title="X" onPress={() => deleteNote(index)} />
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  );
+};
+
+const NoteScreen = ({ navigation, route }) => {
+  const [text, setText
